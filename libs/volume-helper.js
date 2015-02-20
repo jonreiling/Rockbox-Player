@@ -22,11 +22,9 @@ VolumeHelper.prototype.setVolume = function( volume ) {
 	if ( targetVol > 100 ) targetVol = 100;
 	
 	if ( targetVol != this.currentVolume ) {
-		exec('amixer  sset PCM,0 '+targetVol+'%', {"silent":true}, function(code, output) {});	
-		this.currentVolume = targetVol;
-
 		this.emit( 'volumeUpdate' , this.perceivedVolume );
-
+		this.currentVolume = targetVol;
+		exec('amixer  sset PCM,0 '+targetVol+'%', {"silent":true}, function(code, output) {});	
 	}
 }
 

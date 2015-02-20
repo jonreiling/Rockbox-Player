@@ -108,7 +108,7 @@ function broadcastState() {
 }
 
 function broadcastTracks() {
-	
+
 	queueManager.getQueue(function(queue) {
 
 		socketObject.emit( 'trackUpdate',queue);
@@ -116,5 +116,6 @@ function broadcastTracks() {
 }
 
 function broadcastVolume() {
+	
 	socketObject.emit( 'volumeUpdate', {'volume':volumeHelper.getVolume()});
 }
