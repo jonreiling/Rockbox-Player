@@ -72,7 +72,7 @@ function setupAsServer() {
 function setupWithPassthroughServer() {
 
 //	socketObject = require('socket.io-client')('http://rockbox-reiling.rhcloud.com/rockbox-player');
-	socketObject = require('socket.io-client')('rockbox-reiling.rhcloud.com:8000/rockbox-player');
+	socketObject = require('socket.io-client')('rockbox-reiling.rhcloud.com/rockbox-player');
 	
 	socketObject.on('play', function(trackId){
 		queueManager.addTrack(trackId);
