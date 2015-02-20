@@ -91,7 +91,7 @@ function setupWithPassthroughServer() {
 	});
 
 	socketObject.on('connect', function(){
-
+		console.log( 'connected' );
 		broadcastTracks();
 		broadcastState();
 		broadcastVolume();
