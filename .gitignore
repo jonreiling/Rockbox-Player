@@ -1,0 +1,7 @@
+
+npm-debug.log
+node_modules/
+cache/
+settings/
+spotify_appkey.key
+credentials.js

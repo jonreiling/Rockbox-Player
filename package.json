@@ -1,0 +1,16 @@
+{
+  "name": "Rockbox-Player",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+  	"node-spotify":"0.7.0",
+	  "socket.io-client":"1.3.4",
+    "socket.io":"latest",
+    "express": "3.4.8",    
+    "shelljs":"*",
+    "request":"*"
+  }
+}
