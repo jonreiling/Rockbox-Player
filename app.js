@@ -67,6 +67,7 @@ function setupAsServer() {
 		socket.on('setRadio', function(onOff){
 			console.log( "SET RADIO " , onOff);
 			queueManager.radioOn = onOff;
+			broadcastState();
 		});
 
 
@@ -88,6 +89,7 @@ function setupWithPassthroughServer() {
 	socketObject.on('setRadio', function(onOff){
 		console.log( "SET RADIO " , onOff);
 		queueManager.radioOn = onOff;
+		broadcastState();
 	});
 
 
