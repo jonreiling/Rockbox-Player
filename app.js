@@ -1,5 +1,5 @@
 var spotifyHelper = new (require('./libs/spotify-helper'))();
-var queueManager = new (require('./libs/queueManager/LocalQueueManager'))(spotifyHelper.spotifyObject());
+var queueManager = new (require('./libs/queueManager/RadioQueueManager'))(spotifyHelper.spotifyObject());
 var volumeHelper = new (require('./libs/volume-helper'))();
 var socketObject;
 
@@ -22,8 +22,8 @@ spotifyHelper.logIn( function() {
 	});
 
 
-	setupWithPassthroughServer();
-	//setupAsServer();
+	//setupWithPassthroughServer();
+	setupAsServer();
 });
 
 function setupAsServer() {
@@ -62,7 +62,14 @@ function setupAsServer() {
 
 		socket.on('setVolume', function(volume){
 			volumeHelper.setVolume(volume);
-		});			
+		});	
+
+		socket.on('setRadio', function(onOff){
+			console.log( "SET RADIO " , onOff);
+			queueManager.radioOn = onOff;
+		});
+
+
 	});
 
 
@@ -77,6 +84,12 @@ function setupWithPassthroughServer() {
 	socketObject.on('play', function(trackId){
 		queueManager.addTrack(trackId);
 	});
+
+	socketObject.on('setRadio', function(onOff){
+		console.log( "SET RADIO " , onOff);
+		queueManager.radioOn = onOff;
+	});
+
 
 	socketObject.on('setVolume', function(volume){
 		volumeHelper.setVolume(volume);
@@ -104,7 +117,7 @@ function setupWithPassthroughServer() {
 }
 
 function broadcastState() {
-	socketObject.emit( 'stateUpdate' , {'playing':spotifyHelper.isPlaying()});
+	socketObject.emit( 'stateUpdate' , {'playing':spotifyHelper.isPlaying(), 'radio':queueManager.radioOn});
 }
 
 function broadcastTracks() {

@@ -20,7 +20,6 @@ BaseQueueManager.prototype.getNextTrack = function(callback) {
 };
 
 BaseQueueManager.prototype.addTrack = function(trackId) {
-	console.log( "SUPER!");
 	this.emit( 'trackUpdate' );
 
 };

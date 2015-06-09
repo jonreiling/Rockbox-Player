@@ -198,7 +198,7 @@ SpotifyHelper.prototype.keepAlive = function() {
 	var keepAliveTrack = this.spotify.createFromLink( "spotify:track:0HEmnAUT8PHznIAAmVXqFJ" ); 
 	this.spotify.player.play( keepAliveTrack );
 	
-	//Play for one minute and then stop.
+	//Play for one second and then stop.
 	setTimeout( function() {
 		scope.spotify.player.stop(); //Stop after 1 second.
 	},1000);

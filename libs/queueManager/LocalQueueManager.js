@@ -57,22 +57,28 @@ LocalQueueManager.prototype.getNextTrack = function(callback) {
 	var scope = this;
 
 	if ( this.queue.length == 0 ) {
-		this.currentTrack = null;
-		callback(null);
-		scope.emit( 'trackUpdate' );
-		return;
+		this.setCurrentTrack( null , callback );
+	} else {
+
+		var track = scope.queue.shift();
+
+		this.getSpotifyObject( track , function(t) {
+			scope.setCurrentTrack( track , callback );
+		
+		});
 	}
 
-	var track = this.queue[0];
 
-	this.getSpotifyObject( track , function(t) {
-		scope.currentTrack = scope.queue.shift();
-		callback(track);
-		scope.emit( 'trackUpdate' );
-	
-	});
 
 };
+
+
+BaseQueueManager.prototype.setCurrentTrack = function(track,callback) {
+	this.currentTrack = track;
+	callback(track);
+	this.emit( 'trackUpdate' );
+}
+
 
 LocalQueueManager.prototype.hasNextTrack = function() {
 	return this.queue.length != 0;
