@@ -22,8 +22,8 @@ spotifyHelper.logIn( function() {
 	});
 
 
-	//setupWithPassthroughServer();
-	setupAsServer();
+	setupWithPassthroughServer();
+	//setupAsServer();
 });
 
 function setupAsServer() {
