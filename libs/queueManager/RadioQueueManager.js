@@ -40,15 +40,12 @@ RadioQueueManager.prototype.getNextTrack = function(callback) {
 
 	//If there's nothing in the queue, look into starting a radio station
 	if ( this.queue.length == 0 ) {
-		console.log( "1" );
 
 		//If radioOn is true and if there's a seed track, then...
 		if ( this.radioOn && this.seedTrack != null ) {
-		console.log( "2" );
 
 			//See if an existing radio session exists. 
 			if ( this.radioSession == null ) {
-				console.log( "3" );
 
 				//Start a radio station based on the seed track
 				this.startRadioStation(this.seedTrack,function(){
@@ -58,7 +55,6 @@ RadioQueueManager.prototype.getNextTrack = function(callback) {
 
 					//Fetch the next track based on that new radio session
 					scope.fetchNextTrackInStation(function(track) {
-						console.log( "setCurrentTrack" );
 						innerscope.setCurrentTrack(track,innercallback);
 					});
 
@@ -67,16 +63,13 @@ RadioQueueManager.prototype.getNextTrack = function(callback) {
 			} else {
 
 				//A radio session already exists, so get the next track.
-				console.log( "4" );
 				this.fetchNextTrackInStation(function(track) {
 					scope.setCurrentTrack(track,callback);
-
 				});
 
 			}
 
 		} else {
-			console.log( "5" );
 
 			//The radio is off and we're at the end of our queue.
 			//Set the current track to null.
@@ -88,23 +81,15 @@ RadioQueueManager.prototype.getNextTrack = function(callback) {
 	} else {
 
 		//There are still songs in the queue, so proceed as normal
-		console.log( "6" );
 		LocalQueueManager.prototype.getNextTrack.call(this,callback);
-
 	}
-
-
-
 };
 
 RadioQueueManager.prototype.startRadioStation = function(seed,callback) {
 
-	console.log( "startRadioStation" );
-
 	var scope = this;
 	var requestURI = this.radioCreateBaseOnTrackURI;
 	
-	seed = seed.replace( "spotify" , "spotify-WW" );
 	requestURI = requestURI.replace( "[ID]" , seed );
 	
 	request(requestURI, function (error, response, body) {
@@ -113,7 +98,6 @@ RadioQueueManager.prototype.startRadioStation = function(seed,callback) {
 
 	 	var rawResponseJSON = JSON.parse( body ).response;
 		scope.radioSession = rawResponseJSON.session_id;
-		console.log( "scope.radioSession is set to " + scope.radioSession );
 		callback();
 
 	  } else {
