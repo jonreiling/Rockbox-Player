@@ -113,7 +113,8 @@ function setupWithPassthroughServer() {
 	});
 
 	socketObject.on('disconnect', function(){
-		console.log('disconnect')
+		console.log('disconnect');
+		volumeHelper.setVolume(0);
 		//TODO: Shut things down in case of disconnect...
 	});	
 }
