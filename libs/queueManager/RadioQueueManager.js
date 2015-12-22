@@ -22,7 +22,10 @@ RadioQueueManager.prototype = Object.create(LocalQueueManager.prototype, {
 
 RadioQueueManager.prototype.addTrack = function(trackId) {
 
+	//There's a new track, so destroy any previous radioSessions.
 	this.radioSession = null;
+
+	//Set the seedTrack to the last track added.
 	this.seedTrack = trackId;
 
 	LocalQueueManager.prototype.addTrack.call(this,trackId);
@@ -35,20 +38,25 @@ RadioQueueManager.prototype.getNextTrack = function(callback) {
 	console.log( "getNextTrack" );
 	var scope = this;
 
-
+	//If there's nothing in the queue, look into starting a radio station
 	if ( this.queue.length == 0 ) {
 		console.log( "1" );
 
-		if ( this.radioOn ) {
+		//If radioOn is true and if there's a seed track, then...
+		if ( this.radioOn && this.seedTrack != null ) {
 		console.log( "2" );
 
+			//See if an existing radio session exists. 
 			if ( this.radioSession == null ) {
-		console.log( "3" );
+				console.log( "3" );
 
+				//Start a radio station based on the seed track
 				this.startRadioStation(this.seedTrack,function(){
 
 					var innerscope = scope;
 					var innercallback = callback;
+
+					//Fetch the next track based on that new radio session
 					scope.fetchNextTrackInStation(function(track) {
 						console.log( "setCurrentTrack" );
 						innerscope.setCurrentTrack(track,innercallback);
@@ -58,7 +66,8 @@ RadioQueueManager.prototype.getNextTrack = function(callback) {
 
 			} else {
 
-		console.log( "4" );
+				//A radio session already exists, so get the next track.
+				console.log( "4" );
 				this.fetchNextTrackInStation(function(track) {
 					scope.setCurrentTrack(track,callback);
 
@@ -67,8 +76,10 @@ RadioQueueManager.prototype.getNextTrack = function(callback) {
 			}
 
 		} else {
-		console.log( "5" );
+			console.log( "5" );
 
+			//The radio is off and we're at the end of our queue.
+			//Set the current track to null.
 			scope.setCurrentTrack(null,callback);
 		}
 
@@ -76,6 +87,7 @@ RadioQueueManager.prototype.getNextTrack = function(callback) {
 
 	} else {
 
+		//There are still songs in the queue, so proceed as normal
 		console.log( "6" );
 		LocalQueueManager.prototype.getNextTrack.call(this,callback);
 
@@ -150,7 +162,7 @@ RadioQueueManager.prototype.fetchNextTrackInStation = function(callback) {
 RadioQueueManager.prototype.emptyQueue = function() {
 
 	this.radioSession = null;
-	this.seedTrack = null;
+	//this.seedTrack = null;
 
 	LocalQueueManager.prototype.emptyQueue.call(this);
 
