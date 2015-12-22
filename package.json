@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "serve": "node app.js"
+    "serve": "node app.js serve"
   },
   "dependencies": {
   	"node-spotify":"0.7.1",

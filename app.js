@@ -5,11 +5,9 @@ var queueManager = new (require('./libs/queueManager/RadioQueueManager'))(spotif
 var volumeHelper = new (require('./libs/volume-helper'))();
 var socketObject;
 
-console.log();
-
 spotifyHelper.logIn( function() {
 
-	console.log( "logged in" );
+	console.log( 'logged in' );
 
 	spotifyHelper.setQueueManager( queueManager );
 
@@ -26,8 +24,11 @@ spotifyHelper.logIn( function() {
 	});
 
 
-	setupWithPassthroughServer();
-	//setupAsServer();
+	if (process.argv[2] == 'serve' ) {
+		setupAsServer();
+	} else {
+		setupWithPassthroughServer();
+	}
 });
 
 function setupAsServer() {
@@ -36,7 +37,7 @@ function setupAsServer() {
 	var express = require('express');
 	var app = express();
 	var server = http.createServer(app);
-	var io = require('socket.io').listen(server, {"log":true});
+	var io = require('socket.io').listen(server, {'log':true});
 
 	app.get('/', function(req, res){
 	  res.send('');
@@ -69,7 +70,7 @@ function setupAsServer() {
 		});	
 
 		socket.on('setRadio', function(onOff){
-			console.log( "SET RADIO " , onOff);
+			console.log( 'SET RADIO' , onOff);
 			queueManager.radioOn = onOff;
 			broadcastState();
 		});
@@ -90,11 +91,10 @@ function setupWithPassthroughServer() {
 	});
 
 	socketObject.on('setRadio', function(onOff){
-		console.log( "SET RADIO " , onOff);
+		console.log( 'SET RADIO' , onOff);
 		queueManager.radioOn = onOff;
 		broadcastState();
 	});
-
 
 	socketObject.on('setVolume', function(volume){
 		volumeHelper.setVolume(volume);
@@ -122,6 +122,7 @@ function setupWithPassthroughServer() {
 }
 
 function broadcastState() {
+
 	socketObject.emit( 'stateUpdate' , {'playing':spotifyHelper.isPlaying(), 'radio':queueManager.radioOn});
 }
 
