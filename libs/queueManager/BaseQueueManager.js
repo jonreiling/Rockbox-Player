@@ -31,42 +31,45 @@ BaseQueueManager.prototype.getSpotifyObject = function( object , callback ) {
 	//If the object is already loaded, make the call-back immediately.
 	if (object.isLoaded) {
 
-		this.getSpotifyArt(object,callback);
+		this.getSpotifyExtras(object,callback);
 //		callback(object);
 
 	} else { //Otherwise, wait for it load.
 		var scope = this;
 		this.spotifyObject.waitForLoaded([object], function(){
-			scope.getSpotifyArt(object,callback);
+			scope.getSpotifyExtras(object,callback);
 //			callback(object);
 		});		
 	}
 	
 }
 
-BaseQueueManager.prototype.getSpotifyArt = function( track , callback ) {
+BaseQueueManager.prototype.getSpotifyExtras = function( track , callback ) {
 
-	//If the object is already loaded, make the call-back immediately.
+	//If the object extras already exist (not sure why they would, but just in case), just callback.
 	if (track.album_art_url) {
 
 		callback(track);
 
-	} else { //Otherwise, wait for it load.
+	} else { //Otherwise, call the api.
 
+		var id = track.link;
+		id = id.replace("spotify:track:","");
 
-		var id = track.album.link;
-		id = id.replace("spotify:album:","");
-
-		request( 'https://api.spotify.com/v1/albums/' + id , function (error, response, body) {
+		request( 'https://api.spotify.com/v1/tracks/' + id , function (error, response, body) {
 
 			if (!error){
 
 				var json = JSON.parse( body );
-				console.log(json.images[0].url);
-				track.album_cover_art = json.images[0].url;
+
+				//Set track album art
+				track.album_art = json.album.images[0].url;
+				track.explicit = json.explicit;
+				track.duration_ms = json.duration_ms;
 
 			} else {
-				track.album_cover_art = '';
+				track.album_art = '';
+				track.explicit = false;
 			}
 
 			callback(track);
