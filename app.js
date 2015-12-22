@@ -1,4 +1,4 @@
-require('dotenv').load();
+require('dotenv-safe').load();
 
 var spotifyHelper = new (require('./libs/spotify-helper'))();
 var queueManager = new (require('./libs/queueManager/RadioQueueManager'))(spotifyHelper.spotifyObject());

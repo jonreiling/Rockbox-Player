@@ -13,6 +13,6 @@
     "express": "3.4.8",    
     "shelljs":"latest",
     "request":"latest",
-    "dotenv":"latest"
+    "dotenv-safe":"latest"
   }
 }
