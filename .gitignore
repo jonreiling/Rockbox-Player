@@ -5,3 +5,5 @@ cache/
 settings/
 spotify_appkey.key
 credentials.js
+
+.env

@@ -1,7 +1,6 @@
 module.exports = SpotifyHelper;
 
 var events = require('events');
-var userInfo = require( '../credentials' );
 
 /**
 	Constructor.
@@ -67,7 +66,7 @@ SpotifyHelper.prototype.logIn = function( callback ) {
 			})
 		}
 	});
-	this.spotify.login(userInfo.credentials.username, userInfo.credentials.password, true, false);
+	this.spotify.login(process.env.SPOTIFY_USER, process.env.SPOTIFY_PASS, true, false);
 }
 
 
@@ -90,6 +89,7 @@ SpotifyHelper.prototype.pause = function() {
 		this.setPlayState( true );
 	}	
 };
+
 
 /**
 	Play the next upcoming track.
@@ -160,6 +160,23 @@ SpotifyHelper.prototype.setPlayState = function( newState ) {
 	
 	this.playing = newState;
 }
+
+
+/**
+	Stop all activity in case of disconnect 
+*/
+SpotifyHelper.prototype.stopAll = function() {
+
+	//If there's no current track, don't do anything.
+	if ( this.queueManager.getCurrentTrack() == null ) {
+		return;
+	}
+
+	this.spotify.player.pause();
+	this.setPlayState( false );
+	
+};
+
 
 /**
 	Start our keepalive timer.

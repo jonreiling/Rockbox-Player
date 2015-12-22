@@ -1,7 +1,11 @@
+require('dotenv').load();
+
 var spotifyHelper = new (require('./libs/spotify-helper'))();
 var queueManager = new (require('./libs/queueManager/RadioQueueManager'))(spotifyHelper.spotifyObject());
 var volumeHelper = new (require('./libs/volume-helper'))();
 var socketObject;
+
+console.log();
 
 spotifyHelper.logIn( function() {
 
@@ -79,8 +83,7 @@ function setupAsServer() {
 
 function setupWithPassthroughServer() {
 
-//	socketObject = require('socket.io-client')('http://rockbox-reiling.rhcloud.com/rockbox-player');
-	socketObject = require('socket.io-client')('rockbox-reiling.rhcloud.com/rockbox-player');
+	socketObject = require('socket.io-client')(process.env.PASSTHROUGH_SERVER + '/rockbox-player');
 	
 	socketObject.on('play', function(trackId){
 		queueManager.addTrack(trackId);
@@ -114,8 +117,7 @@ function setupWithPassthroughServer() {
 
 	socketObject.on('disconnect', function(){
 		console.log('disconnect');
-		volumeHelper.setVolume(0);
-		//TODO: Shut things down in case of disconnect...
+		spotifyHelper.stopAll();
 	});	
 }
 
