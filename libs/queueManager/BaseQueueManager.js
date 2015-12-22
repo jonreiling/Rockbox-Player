@@ -53,7 +53,6 @@ BaseQueueManager.prototype.getSpotifyArt = function( track , callback ) {
 
 	} else { //Otherwise, wait for it load.
 
-		console.log(track);
 
 		var id = track.album.link;
 		id = id.replace("spotify:album:","");
@@ -70,7 +69,6 @@ BaseQueueManager.prototype.getSpotifyArt = function( track , callback ) {
 				track.album_cover_art = '';
 			}
 
-			console.log(track);
 			callback(track);
 		});
 	}
