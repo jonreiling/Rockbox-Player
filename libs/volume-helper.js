@@ -43,7 +43,6 @@ VolumeHelper.prototype.setVolume = function( volume ) {
 
 	//constrain the volume between 0-100. 
 	volume = Math.max( 0 , Math.min( 100 , volume) );
-	console.log('set volume',volume);
 	this.perceivedVolume = volume;
 	var targetVol = 40 * (volume/100) + 40;
 	
