@@ -4,8 +4,7 @@ module.exports = VolumeHelper;
 var events = require('events');
 
 function VolumeHelper() {
-	this.currentVolume = 60;
-	this.perceivedVolume = 60;
+	this.setVolume('normal');
 }
 
 VolumeHelper.super_ = events.EventEmitter;
