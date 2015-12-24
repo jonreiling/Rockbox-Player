@@ -24,7 +24,7 @@ spotifyHelper.logIn( function() {
 	});
 
 
-	if (process.argv[2] == 'serve' ) {
+	if (process.argv[2] == 'standalone' ) {
 		setupAsServer();
 	} else {
 		setupWithPassthroughServer();
@@ -57,8 +57,8 @@ function setupAsServer() {
 			spotifyHelper.pause();
 		});
 
-		socket.on('play',function(trackId) {
-			queueManager.addTrack(trackId);
+		socket.on('play',function(id) {
+			queueManager.add(id);
 		});
 
 		socket.on('skip',function(trackId) {
@@ -86,8 +86,8 @@ function setupWithPassthroughServer() {
 
 	socketObject = require('socket.io-client')(process.env.PASSTHROUGH_SERVER + '/rockbox-player');
 	
-	socketObject.on('play', function(trackId){
-		queueManager.addTrack(trackId);
+	socketObject.on('play', function(id){
+		queueManager.add(id);
 	});
 
 	socketObject.on('setRadio', function(onOff){
