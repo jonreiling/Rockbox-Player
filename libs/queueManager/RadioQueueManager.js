@@ -4,8 +4,8 @@ var request = require('request');
 
 function RadioQueueManager( spotifyObject ) {
 	LocalQueueManager.call(this,spotifyObject);
-	this.radioCreateBaseOnTrackURI = "http://developer.echonest.com/api/v4/playlist/dynamic/create?api_key=HTKXMA4SPYNBDPBMZ&song_id=[ID]&type=song-radio&bucket=id:spotify-US&bucket=tracks&limit=true&session_catalog=CAYDQBV146395B2439"
-	this.nextTrackURI = "http://developer.echonest.com/api/v4/playlist/dynamic/next?api_key=HTKXMA4SPYNBDPBMZ&format=json&session_id=[SESSION]";
+	this.radioCreateBaseOnTrackURI = "http://developer.echonest.com/api/v4/playlist/dynamic/create?api_key="+process.env.ECHONEST_KEY+"&song_id=[ID]&type=song-radio&bucket=id:spotify-US&bucket=tracks&limit=true&session_catalog=CAYDQBV146395B2439"
+	this.nextTrackURI = "http://developer.echonest.com/api/v4/playlist/dynamic/next?api_key="+process.env.ECHONEST_KEY+"&format=json&session_id=[SESSION]";
 	this.radioSession = null;
 	this.seedTrack = null;
 	this.radioOn = true;
@@ -20,16 +20,18 @@ RadioQueueManager.prototype = Object.create(LocalQueueManager.prototype, {
 });
 
 
-RadioQueueManager.prototype.addTrack = function(trackId) {
+RadioQueueManager.prototype.addTrack = function(trackIds) {
 
 	//There's a new track, so destroy any previous radioSessions.
 	this.radioSession = null;
 
+	//Split out, in case multiples
+	var tracks = trackIds.split(",");
+
 	//Set the seedTrack to the last track added.
-	this.seedTrack = trackId;
+	this.seedTrack = tracks[tracks.length-1];
 
-	LocalQueueManager.prototype.addTrack.call(this,trackId);
-
+	LocalQueueManager.prototype.addTrack.call(this,trackIds);
 };
 
 

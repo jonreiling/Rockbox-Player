@@ -1,5 +1,6 @@
 module.exports = LocalQueueManager;
 var BaseQueueManager = require('./BaseQueueManager.js');
+var request = require('request');
 
 function LocalQueueManager( spotifyObject ) {
 	BaseQueueManager.call(this,spotifyObject);
@@ -15,16 +16,48 @@ LocalQueueManager.prototype = Object.create(BaseQueueManager.prototype, {
     }
 });
 
-LocalQueueManager.prototype.addTrack = function(trackId) {
-	console.log( "Add track" , trackId );
-	this.queue.push( this.spotifyObject.createFromLink( trackId ) );
-	this.emit( 'trackUpdate' );
+LocalQueueManager.prototype.addTrack = function(trackIds) {
 
-	if ( this.queue.length == 1 && this.currentTrack == null ) {
-		this.emit( 'firstTrack' );
+	//See if this is the first track we're adding after a full stop.
+	var firstTrack = ( this.queue.length == 0 && this.currentTrack == null );
+
+	//Split out, in case multiples
+	var tracks = trackIds.split(",");
+
+	for ( var i = 0 ; i < tracks.length ; i ++ ) {
+		this.queue.push( this.spotifyObject.createFromLink( tracks[i] ) );
 	}
 
+	this.emit( 'trackUpdate' );
+
+	if ( firstTrack ) {
+		this.emit( 'firstTrack' );
+	}
 };
+
+LocalQueueManager.prototype.addAlbum = function(albumId) {
+
+	var scope = this;
+	albumId = albumId.replace("spotify:album:","");
+
+	request( 'https://api.spotify.com/v1/albums/' + albumId +'/tracks?limit=50' , function (error, response, body) {
+
+		if (!error){
+
+			var json = JSON.parse( body );
+			var tracks = [];
+
+			for ( var i = 0 ; i < json.items.length ; i ++ ) {
+				tracks.push(json.items[i].uri);
+			}
+
+			scope.addTrack(tracks.join(","));
+
+		}
+
+	});
+
+}
 
 LocalQueueManager.prototype.getCurrentTrack = function() {
 	return this.currentTrack;
