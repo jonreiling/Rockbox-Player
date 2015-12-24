@@ -2,8 +2,6 @@ module.exports = BaseQueueManager;
 var events = require('events');
 var request = require('request');
 
-
-
 BaseQueueManager.super_ = events.EventEmitter;
 BaseQueueManager.prototype = Object.create(events.EventEmitter.prototype, {
     constructor: {
@@ -20,10 +18,23 @@ BaseQueueManager.prototype.getNextTrack = function(callback) {
 
 };
 
+BaseQueueManager.prototype.add = function(id) {
+	if ( id.indexOf(':track:') != -1 ) {
+		this.addTrack(id);
+	} else if ( id.indexOf(':album:') != -1 ) {
+		this.addAlbum(id);
+	}
+}
+
 BaseQueueManager.prototype.addTrack = function(trackId) {
 	this.emit( 'trackUpdate' );
 
 };
+
+BaseQueueManager.prototype.addAlbum = function(albumId) {
+
+};
+
 
 BaseQueueManager.prototype.getSpotifyObject = function( object , callback ) {
 
@@ -32,13 +43,11 @@ BaseQueueManager.prototype.getSpotifyObject = function( object , callback ) {
 	if (object.isLoaded) {
 
 		this.getSpotifyExtras(object,callback);
-//		callback(object);
 
 	} else { //Otherwise, wait for it load.
 		var scope = this;
 		this.spotifyObject.waitForLoaded([object], function(){
 			scope.getSpotifyExtras(object,callback);
-//			callback(object);
 		});		
 	}
 	
@@ -65,7 +74,6 @@ BaseQueueManager.prototype.getSpotifyExtras = function( track , callback ) {
 				//Set track album art
 				track.album_art = json.album.images[0].url;
 				track.explicit = json.explicit;
-				track.duration_ms = json.duration_ms;
 
 			} else {
 				track.album_art = '';
