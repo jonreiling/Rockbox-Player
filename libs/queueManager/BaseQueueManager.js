@@ -27,7 +27,7 @@ BaseQueueManager.prototype.add = function(id) {
 }
 
 BaseQueueManager.prototype.addTrack = function(trackId) {
-	this.emit( 'trackUpdate' );
+	this.emit( 'queueUpdate' );
 
 };
 

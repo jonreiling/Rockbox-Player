@@ -9,8 +9,6 @@
   "dependencies": {
   	"node-spotify":"0.7.1",
 	  "socket.io-client":"1.3.4",
-    "socket.io":"latest",
-    "express": "3.4.8",    
     "shelljs":"latest",
     "request":"latest",
     "dotenv-safe":"latest"

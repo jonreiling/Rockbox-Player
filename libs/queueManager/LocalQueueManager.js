@@ -34,7 +34,7 @@ LocalQueueManager.prototype.addTrack = function(trackIds) {
 	if ( firstTrack ) {
 		this.emit( 'firstTrack' );
 	} else {
-		this.emit( 'trackUpdate' );
+		this.emit( 'queueUpdate' );
 	}
 };
 
@@ -114,7 +114,7 @@ LocalQueueManager.prototype.getNextTrack = function(callback) {
 BaseQueueManager.prototype.setCurrentTrack = function(track,callback) {
 	this.currentTrack = track;
 	callback(track);
-	this.emit( 'trackUpdate' );
+	this.emit( 'queueUpdate' );
 }
 
 
@@ -125,5 +125,5 @@ LocalQueueManager.prototype.hasNextTrack = function() {
 LocalQueueManager.prototype.emptyQueue = function() {
 	this.queue = [];
 	currentTrack = null;
-	this.emit( 'trackUpdate' );
+	this.emit( 'queueUpdate' );
 };
