@@ -72,13 +72,15 @@ BaseQueueManager.prototype.getSpotifyExtras = function( track , callback ) {
 				var json = JSON.parse( body );
 
 				//Set track album art
-				track.album_art = json.album.images[0].url;
-				track.explicit = json.explicit;
+	//			track.album_art = json.album.images[0].url;
+	//			track.explicit = json.explicit;
+				track.object = json;
 
 			} else {
-				track.album_art = '';
-				track.explicit = false;
+	//			track.album_art = '';
+	//			track.explicit = false;
 			}
+
 
 			callback(track);
 		});

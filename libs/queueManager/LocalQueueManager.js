@@ -25,13 +25,16 @@ LocalQueueManager.prototype.addTrack = function(trackIds) {
 	var tracks = trackIds.split(",");
 
 	for ( var i = 0 ; i < tracks.length ; i ++ ) {
-		this.queue.push( this.spotifyObject.createFromLink( tracks[i] ) );
-	}
+		var trackObj = this.spotifyObject.createFromLink( tracks[i] );
+		this.queue.push( trackObj );
+		this.getSpotifyObject( trackObj , function(t) {});
 
-	this.emit( 'trackUpdate' );
+	}
 
 	if ( firstTrack ) {
 		this.emit( 'firstTrack' );
+	} else {
+		this.emit( 'trackUpdate' );
 	}
 };
 
@@ -74,11 +77,16 @@ LocalQueueManager.prototype.getQueue = function(callback) {
 
 	for ( var i = 0 ; i < fullQueue.length ; i ++ ) {
 
-		if ( fullQueue[ i ].name == "Loading..." ){
+//		if ( fullQueue[ i ].name == "Loading..." ){
+		if ( fullQueue[ i ].object == null ){
 			setTimeout( function(){ scope.getQueue(callback) } , 10 );
 			return;
 		}
 
+	}
+
+	for ( i = 0 ; i < fullQueue.length ; i ++ ) {
+		fullQueue[i] = fullQueue[i].object;
 	}
 
 	return callback(fullQueue);
@@ -97,11 +105,8 @@ LocalQueueManager.prototype.getNextTrack = function(callback) {
 
 		this.getSpotifyObject( track , function(t) {
 			scope.setCurrentTrack( track , callback );
-		
 		});
 	}
-
-
 
 };
 
