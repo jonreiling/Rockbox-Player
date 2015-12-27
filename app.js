@@ -57,7 +57,7 @@ function setupAsServer() {
 			spotifyHelper.pause();
 		});
 
-		socket.on('play',function(id) {
+		socket.on('add',function(id) {
 			queueManager.add(id);
 		});
 
@@ -86,7 +86,7 @@ function setupWithPassthroughServer() {
 
 	socketObject = require('socket.io-client')(process.env.PASSTHROUGH_SERVER + '/rockbox-player');
 	
-	socketObject.on('play', function(id){
+	socketObject.on('add', function(id){
 		queueManager.add(id);
 	});
 
@@ -129,8 +129,8 @@ function broadcastState() {
 function broadcastTracks() {
 
 	queueManager.getQueue(function(queue) {
-
-		socketObject.emit( 'trackUpdate',queue);
+		console.log({'tracks':queue});
+		socketObject.emit( 'trackUpdate',{'tracks':queue});
 	})
 }
 
