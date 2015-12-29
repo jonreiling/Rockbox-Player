@@ -2,10 +2,10 @@
 
 A lightweight communal jukebox built around Spotify and designed for the Raspberry Pi.
 
-##Requirement
--OSX 10.10
--Raspberry PI (Raspbian)
--[Rockbox-Passthrough-Server](https://github.com/jonreiling/Rockbox-Passthrough-Server)
+##Requirements
+- Raspberry PI (Raspbian)
+- [Rockbox-Passthrough-Server](https://github.com/jonreiling/Rockbox-Passthrough-Server)
+- OSX 10.10 (unsupported, but works for testing)
 
 ##Passthrough Server
 
@@ -45,19 +45,20 @@ Create a file named ".env" in the root directory
 SPOTIFY_USER=
 SPOTIFY_PASS=
 PASSTHROUGH_SERVER=
+
 end
 ```
 
-########SPOTIFY_USER 
+######SPOTIFY_USER 
 Username of the spotify account that libspotify will use
 
-#####SPOTIFY_PASS
+######SPOTIFY_PASS
 Password for that user
 
-#####PASSTHROUGH_SERVER
+######PASSTHROUGH_SERVER
 URL where Rockbox-Passthrough-Server is running. This can be the same machine, in which case this will be http://localhost:3000
 
-#####ECHONEST_KEY=
+######ECHONEST_KEY=
 Add this line if you'd like to use Echonest along with the RadioQueueManager class to create an automatic radio station of music based on the last song you played. Get an API key here(http://developer.echonest.com).
 
 #####ECHONEST_TASTE=
