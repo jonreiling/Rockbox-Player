@@ -48,7 +48,7 @@ PASSTHROUGH_SERVER=
 end
 ```
 
-######SPOTIFY_USER 
+########SPOTIFY_USER 
 Username of the spotify account that libspotify will use
 
 #####SPOTIFY_PASS
