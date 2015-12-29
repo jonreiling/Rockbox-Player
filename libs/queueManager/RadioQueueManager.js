@@ -131,7 +131,7 @@ RadioQueueManager.prototype.fetchNextTrackInStation = function(callback) {
 			var innerscope = scope;
 			var innercallback = callback;
 			scope.getSpotifyObject( track , function(t) {
-				t.radioPlay = true;
+				t.object.radioPlay = true;
 				innerscope.currentTrack = t;
 				innercallback(track);
 			});
