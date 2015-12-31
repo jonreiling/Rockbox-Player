@@ -35,12 +35,13 @@ Once your key is created, download the Binary version and save it as spotify_app
 
 ####.env variables
 
-Create a file named ".env" in the root directory
+Create a file named `.env` in the application directory
 
 ```
 SPOTIFY_USER=
 SPOTIFY_PASS=
 PASSTHROUGH_SERVER=
+#ECHONEST_KEY=
 ```
 
 - SPOTIFY_USER Username of the spotify account that libspotify will use
