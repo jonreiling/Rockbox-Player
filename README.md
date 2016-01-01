@@ -19,7 +19,7 @@ In addition, Rockbox-Passthrough-Server can be deployed remotely so that you can
 
 ##Dependencies
 - Node 0.10.xx 
-- libspotify(https://developer.spotify.com/technologies/libspotify/)
+- [libspotify](https://developer.spotify.com/technologies/libspotify/)
 - [node-spotify](http://www.node-spotify.com)
 - Premium Spotify Account
 - [Spotify Developer Account](https://developer.spotify.com)
