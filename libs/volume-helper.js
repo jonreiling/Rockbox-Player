@@ -16,6 +16,11 @@ VolumeHelper.prototype = Object.create(events.EventEmitter.prototype, {
 
 VolumeHelper.prototype.setVolume = function( volume ) {
 
+
+	if ( volume.charAt(0) == "+" || volume.charAt(0) == "-" ) {
+		volume = this.perceivedVolume + parseInt(volume);
+	} 
+
 	switch (volume) {
 
 		case 'up':
