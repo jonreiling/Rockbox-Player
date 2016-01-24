@@ -19,11 +19,11 @@ VolumeHelper.prototype.setVolume = function( volume ) {
 	switch (volume) {
 
 		case 'up':
-			volume = this.currentVolume + 10
+			volume = this.perceivedVolume + 10
 			break;
 
 		case 'down':
-			volume = this.currentVolume - 10;
+			volume = this.perceivedVolume - 10;
 			break;		
 
 		case 'normal':
