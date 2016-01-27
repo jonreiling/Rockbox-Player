@@ -17,7 +17,7 @@ VolumeHelper.prototype = Object.create(events.EventEmitter.prototype, {
 VolumeHelper.prototype.setVolume = function( volume ) {
 
 
-	if ( (typeof myVar === 'string' || myVar instanceof String) && (volume.charAt(0) == "+" || volume.charAt(0) == "-" )) {
+	if ( (typeof volume === 'string' || volume instanceof String) && (volume.charAt(0) == "+" || volume.charAt(0) == "-" )) {
 		volume = this.perceivedVolume + parseInt(volume);
 	} 
 
