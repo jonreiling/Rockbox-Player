@@ -1,84 +1,61 @@
+require( "console-stamp" )( console, { pattern : "mm/dd/yyyy HH:MM:ss.l" } );
 require('dotenv-safe').load();
+require('shelljs/global');
 
-var spotifyHelper = new (require('./libs/spotify-helper'))();
-var queueManager = new (require('./libs/queueManager/RadioQueueManager'))(spotifyHelper.spotifyObject());
-var volumeHelper = new (require('./libs/volume-helper'))();
+var spotify = require('node-spotify')({ appkeyFile: 'spotify_appkey.key' });
 var socketObject;
 
-spotifyHelper.logIn( function() {
+function setupSpotify() {
 
-	console.log( 'logged in' );
+  spotify.on({
 
-	spotifyHelper.setQueueManager( queueManager );
+  	ready:function() {
 
-	queueManager.addListener('queueUpdate',function() {
-		broadcastQueue();
-	});
+      console.log('Log-in successful');
 
-	spotifyHelper.addListener('stateUpdate',function() {
-		broadcastState();
-	});
+      setupSockets();
 
-	volumeHelper.addListener('volumeUpdate',function() {
-		broadcastVolume();
-	});
+  		//Set up end of track functions.
+  		spotify.player.on({
 
-	setupWithPassthroughServer();
-});
+  			endOfTrack:function(err, player) {
+          socketObject.emit( 'endOfTrack' );
+  			},
 
+        logout:function() {
+          console.log( 'Logged out' );
+        }
 
-function setupWithPassthroughServer() {
+  		})
+  	}
+  });
+
+  console.log('Logging in');
+  spotify.login(process.env.SPOTIFY_USER, process.env.SPOTIFY_PASS, true, false);
+}
+
+function setupSockets() {
 
 	socketObject = require('socket.io-client')(process.env.PASSTHROUGH_SERVER + '/rockbox-player');
-	
-	socketObject.on('add', function(id){
-		queueManager.add(id);
-	});
 
-	socketObject.on('setRadio', function(onOff){
-		console.log( 'SET RADIO' , onOff);
-		queueManager.radioOn = onOff;
-		broadcastState();
+	socketObject.on('play', function(id){
+    spotify.player.play( spotify.createFromLink( id ) );
 	});
 
 	socketObject.on('setVolume', function(volume){
-		volumeHelper.setVolume(volume);
-	});
-
-	socketObject.on('pause',function() {
-		spotifyHelper.pause();
-	});
-
-	socketObject.on('skip',function() {
-		spotifyHelper.playNextTrack();
+    if ( !isNaN(volume) && volume < 100 ) { //Normally, I would trust the info coming in. But in this case, could damage hardware if this number gets set wrong.
+      exec('amixer  sset PCM,0 '+volume+'%', {"silent":true}, function(code, output) {});
+    }
 	});
 
 	socketObject.on('connect', function(){
-		console.log( 'connected' );
-		broadcastQueue();
-		broadcastState();
-		broadcastVolume();
+		console.log( 'Connected' );
 	});
 
 	socketObject.on('disconnect', function(){
-		console.log('disconnect');
-		spotifyHelper.stopAll();
-	});	
+		console.log('Disconnected');
+    spotify.player.stop();
+	});
 }
 
-function broadcastState() {
-
-	socketObject.emit( 'stateUpdate' , {'playing':spotifyHelper.isPlaying(), 'radio':queueManager.radioOn});
-}
-
-function broadcastQueue() {
-
-	queueManager.getQueue(function(queue) {
-		socketObject.emit( 'queueUpdate',{'queue':queue});
-	})
-}
-
-function broadcastVolume() {
-	
-	socketObject.emit( 'volumeUpdate', {'volume':volumeHelper.getVolume()});
-}
+setupSpotify();
