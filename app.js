@@ -1,9 +1,11 @@
 require( "console-stamp" )( console, { pattern : "mm/dd/yyyy HH:MM:ss.l" } );
 require('dotenv-safe').load();
 require('shelljs/global');
-
+var http = require('http');
+var Pusher = require('pusher-client');
 var spotify = require('node-spotify')({ appkeyFile: 'spotify_appkey.key' });
-var socketObject;
+
+
 
 function setupSpotify() {
 
@@ -19,7 +21,8 @@ function setupSpotify() {
       spotify.player.on({
 
         endOfTrack:function(err, player) {
-          socketObject.emit( 'endOfTrack' );
+          //socketObject.emit( 'endOfTrack' );
+          http.get( process.env.END_OF_TRACK_URI );
         },
 
         logout:function() {
@@ -40,7 +43,29 @@ function setupSpotify() {
 
 function setupSockets() {
 
-	socketObject = require('socket.io-client')(process.env.PASSTHROUGH_SERVER + '/rockbox-player');
+//	socketObject = require('socket.io-client')(process.env.PASSTHROUGH_SERVER + '/rockbox-player');
+
+  var socket = new Pusher('1276e8d2c9675878f90d',{ cluster: "us2" });
+  var my_channel = socket.subscribe('rockbox');
+
+  socket.bind('play-state-updated', function(data) {
+    console.log('play-state-updated',data);
+    if ( data.playing ) {
+      spotify.player.resume();
+    } else {
+      spotify.player.pause();
+    }
+  });
+
+  socket.bind('track-updated', function(data) {
+    console.log('track-updated',data.track);
+    
+    if ( data.track ) {      
+      spotify.player.play( spotify.createFromLink( data.track.id ) );
+    }
+
+  });
+  /*
 
 	socketObject.on('play', function(id){
 		console.log('play',id);
@@ -70,7 +95,7 @@ function setupSockets() {
 	socketObject.on('disconnect', function(){
 		console.log('Disconnected');
     	spotify.player.stop();
-	});
+	});*/
 }
 
 setupSpotify();
